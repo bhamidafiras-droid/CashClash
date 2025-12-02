@@ -6,16 +6,11 @@ from auth import get_password_hash
 app = FastAPI(title="CashClash API")
 
 # CORS
-origins = [
-    "http://localhost:3000",
-    "http://localhost:5173",  # Vite default
-    "https://cashclash.onrender.com",  # Production frontend
-    "https://*.onrender.com",  # All Render subdomains
-]
+origin_regex = r"^(http://localhost(:\d+)?|https://.*\.onrender\.com)$"
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origin_regex=origin_regex,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
