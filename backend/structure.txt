@@ -1,0 +1,18 @@
+requirements.txt
+.env
+__init__.py
+main.py
+database.py
+models.py
+schemas.py
+auth.py
+routers/
+    __init__.py
+    tournaments.py
+    matches.py
+    auth.py
+services/
+    __init__.py
+    bracket_generator.py
+    riot_api.py
+    email_service.py
