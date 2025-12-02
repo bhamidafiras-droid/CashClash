@@ -7,7 +7,7 @@ import { useAuth } from '../context/AuthContext';
 function Login() {
     const navigate = useNavigate();
     const { login } = useAuth();
-    const [authMode, setAuthMode] = useState('google'); // 'google' or 'email'
+    const [authMode, setAuthMode] = useState('email'); // 'google' or 'email' - default to email
     const [isRegister, setIsRegister] = useState(false);
 
     // Email/Password form state
