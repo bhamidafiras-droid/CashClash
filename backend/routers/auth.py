@@ -4,7 +4,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from database import get_db
 from models import User
-from auth import get_current_user
+from auth import get_current_user, get_password_hash, verify_password
 from google.oauth2 import id_token
 from google.auth.transport import requests
 from passlib.context import CryptContext
@@ -12,7 +12,6 @@ import bcrypt
 import os
 import jwt
 import datetime
-from ..auth import get_password_hash
 
 
 router = APIRouter(
@@ -24,15 +23,6 @@ GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
 SECRET_KEY = os.getenv("SECRET_KEY", "supersecretkey")
 ALGORITHM = "HS256"
 
-def verify_password(plain_password: str, hashed_password: str) -> bool:
-    """Verify a password against a hashed password using bcrypt"""
-    return bcrypt.checkpw(plain_password.encode('utf-8'), hashed_password.encode('utf-8'))
-
-def get_password_hash(password: str) -> str:
-    """Hash a password using bcrypt"""
-    salt = bcrypt.gensalt()
-    hashed = bcrypt.hashpw(password.encode('utf-8'), salt)
-    return hashed.decode('utf-8')
 
 def create_access_token(user_id: str, email: str):
     access_token_expires = datetime.timedelta(minutes=60 * 24 * 7)  # 7 days

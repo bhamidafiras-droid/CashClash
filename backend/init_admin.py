@@ -7,7 +7,7 @@ import asyncio
 from sqlalchemy import select
 from database import async_session, engine, Base
 from models import User
-from auth import hash_password
+from auth import get_password_hash
 
 async def init_admin():
     """Create default admin user if not exists"""
@@ -26,7 +26,7 @@ async def init_admin():
             # Create admin user
             admin = User(
                 email="admin@cashclash.com",
-                hashed_password=hash_password("Admin123!@#"),
+                hashed_password=get_password_hash("Admin123!@#"),
                 display_name="Admin",
                 role="admin",
                 is_verified=True,

@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from routers import auth, tournaments, matches, store, games, admin
 from database import engine, Base
-from .auth import get_password_hash
+from auth import get_password_hash
 app = FastAPI(title="CashClash API")
 
 # CORS
@@ -34,7 +34,7 @@ async def startup():
     print("🚀 Starting CashClash Backend...")
     from sqlalchemy import select
     from models import User
-    from auth import hash_password
+    from auth import get_password_hash
     from database import async_session
     
     # Create tables
@@ -51,7 +51,7 @@ async def startup():
         if not admin:
             admin = User(
                 email="admin@cashclash.com",
-                hashed_password=hash_password("Admin123!@#"),
+                hashed_password=get_password_hash("Admin123!@#"),
                 display_name="Admin",
                 role="admin",
                 is_verified=True,
