@@ -54,6 +54,21 @@ function AdminPanel() {
         }
     };
 
+    const addSPToUser = async (userId, amount) => {
+        try {
+            // Get current user SP
+            const userToUpdate = users.find(u => u.id === userId);
+            if (!userToUpdate) return;
+
+            const newSP = userToUpdate.sp_points + amount;
+            await api.patch(`/admin/users/${userId}`, { sp_points: newSP });
+            alert(`Added ${amount} SP to user. New balance: ${newSP} SP`);
+            loadData();
+        } catch (error) {
+            alert(error.response?.data?.detail || "Failed to add SP");
+        }
+    };
+
     const deleteUser = async (userId) => {
         if (!window.confirm("Are you sure you want to delete this user?")) return;
         try {
@@ -194,7 +209,7 @@ function AdminPanel() {
                                             {u.is_verified ? '✅' : '❌'}
                                         </td>
                                         <td className="py-3 px-4">
-                                            <div className="flex gap-2">
+                                            <div className="flex gap-2 flex-wrap">
                                                 {u.role === 'user' && (
                                                     <button
                                                         onClick={() => promoteUser(u.id, 'moderator')}
@@ -211,6 +226,17 @@ function AdminPanel() {
                                                         → Admin
                                                     </button>
                                                 )}
+                                                <button
+                                                    onClick={() => {
+                                                        const amount = prompt(`Add SP to ${u.display_name}:`, '100');
+                                                        if (amount && !isNaN(amount)) {
+                                                            addSPToUser(u.id, parseInt(amount));
+                                                        }
+                                                    }}
+                                                    className="px-3 py-1 bg-gold-500/20 text-gold-400 rounded text-xs hover:bg-gold-500/30"
+                                                >
+                                                    + SP
+                                                </button>
                                                 <button
                                                     onClick={() => deleteUser(u.id)}
                                                     className="px-3 py-1 bg-red-500/20 text-red-400 rounded text-xs hover:bg-red-500/30"
@@ -248,8 +274,8 @@ function AdminPanel() {
                                                 </span>
                                                 <span className="text-gold-400 font-bold">{game.wager_amount} SP</span>
                                                 <span className={`px-2 py-1 rounded text-xs ${game.status === 'COMPLETED' ? 'bg-green-500/20 text-green-400' :
-                                                        game.status === 'IN_PROGRESS' ? 'bg-yellow-500/20 text-yellow-400' :
-                                                            'bg-gray-500/20 text-gray-400'
+                                                    game.status === 'IN_PROGRESS' ? 'bg-yellow-500/20 text-yellow-400' :
+                                                        'bg-gray-500/20 text-gray-400'
                                                     }`}>
                                                     {game.status}
                                                 </span>
