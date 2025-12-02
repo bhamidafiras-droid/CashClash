@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, Link, useLocation } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import Login from './pages/Login';
@@ -44,7 +44,11 @@ function AppContent() {
 
 function Navbar() {
     const location = useLocation();
-    const { user, logout } = useAuth();
+    const { user, logout, refreshUser } = useAuth();
+
+    useEffect(() => {
+        refreshUser();
+    }, [location.pathname]);
 
     const handleLogout = () => {
         logout();
@@ -72,8 +76,8 @@ function Navbar() {
                         <Link
                             to="/"
                             className={`px-6 py-3 rounded-lg font-black text-lg transition-all duration-300 ${isActive('/')
-                                    ? 'bg-gradient-to-r from-gold-500 to-gold-600 text-dark-900 shadow-glow-gold scale-110'
-                                    : 'bg-gold-500/20 text-gold-400 hover:bg-gold-500/30 border border-gold-500/50'
+                                ? 'bg-gradient-to-r from-gold-500 to-gold-600 text-dark-900 shadow-glow-gold scale-110'
+                                : 'bg-gold-500/20 text-gold-400 hover:bg-gold-500/30 border border-gold-500/50'
                                 }`}
                         >
                             ⚔️ PLAY NOW
