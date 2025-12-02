@@ -7,9 +7,15 @@ load_dotenv()
 
 DATABASE_URL = os.getenv("DATABASE_URL", "postgresql+asyncpg://user:password@localhost/dbname")
 
+print(f"DEBUG: Original DATABASE_URL starts with: {DATABASE_URL.split(':')[0]}")
+
 # Fix Render database URL for asyncpg
-if DATABASE_URL and DATABASE_URL.startswith("postgres://"):
+if DATABASE_URL.startswith("postgres://"):
     DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql+asyncpg://", 1)
+elif DATABASE_URL.startswith("postgresql://") and "asyncpg" not in DATABASE_URL:
+    DATABASE_URL = DATABASE_URL.replace("postgresql://", "postgresql+asyncpg://", 1)
+
+print(f"DEBUG: Final DATABASE_URL starts with: {DATABASE_URL.split(':')[0]}")
 
 engine = create_async_engine(DATABASE_URL, echo=True)
 
