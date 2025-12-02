@@ -31,6 +31,7 @@ app.include_router(admin.router)
 
 @app.on_event("startup")
 async def startup():
+    print("🚀 Starting CashClash Backend...")
     from sqlalchemy import select
     from models import User
     from auth import hash_password
